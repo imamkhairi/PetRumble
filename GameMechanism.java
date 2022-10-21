@@ -7,6 +7,7 @@ public class GameMechanism {
     private GamePanel gp;
     public boolean playerShifted = false;
     public boolean isSaved = false;
+    public long gameTime = 0;
 
     public GameMechanism(Pet[] p, Pet[] e, GamePanel gp) {
         this.player = p;
@@ -17,12 +18,12 @@ public class GameMechanism {
         this.enemyLvl = new int[5];
     }
 
-    public void gameStart(long time) {
+    public void gameStart() {
         if(!isCompleted()) {
             if(this.isSaved == false) safeData();
             shiftPet();
             shiftEnemy();
-            if(this.playerShifted) battle(time);
+            if(this.playerShifted) battle(gameTime);
             isDefeated();
         }
     }
@@ -130,9 +131,9 @@ public class GameMechanism {
             }
         }
         if((result[0] && result[1] && result[2] && result[3] && result[4]) || (result[5] && result[6] && result[7] && result[8] && result[9])){
-            System.out.println("done");
+            System.out.println("draw");
             return true;
-        } 
+        }
         else return false;
     }
 }

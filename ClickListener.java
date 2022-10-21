@@ -3,8 +3,10 @@ import java.awt.Point;
 
 public class ClickListener extends MouseAdapter{
     GamePanel gp;
-    
-    ClickListener(GamePanel gp) {
+    GameMechanism gm;
+
+    ClickListener(GamePanel gp, GameMechanism gm) {
+        this.gm = gm;
         this.gp = gp;
     }
 
@@ -43,6 +45,7 @@ public class ClickListener extends MouseAdapter{
                                     gp.gm.resetPanel();
                                     gp.playerStatus.resetCoin();
                                     updatePlayerCoin();
+                                    gm.gameTime = 0;
                                 }
                             }
                         }
@@ -92,6 +95,26 @@ public class ClickListener extends MouseAdapter{
         } else if (gp.collide != gp.selectedPet && gp.pet[gp.collide] != null && gp.pet[gp.selectedPet].getFileInput().equals(gp.pet[gp.collide].getFileInput())) {
             gp.pet[gp.selectedPet] = null;
             gp.pet[gp.collide].upLevel();
+        } else if(gp.pet[gp.collide] != null) {
+            String a = gp.pet[gp.selectedPet].getFileInput();
+            int a_level = gp.pet[gp.selectedPet].getLevel();
+            String b = gp.pet[gp.collide].getFileInput();
+            int b_level = gp.pet[gp.collide].getLevel();
+            changePet(gp.selectedPet, b);
+            changePet(gp.collide, a);
+            updateLevelChange(b_level, gp.pet[gp.selectedPet]);
+            updateLevelChange(a_level, gp.pet[gp.collide]);
+        }
+    }
+
+    private void changePet(int index, String file) {
+        gp.pet[index] = null;
+        gp.pet[index] = new Pet((int)(gp.setTeam[index].getX()), (int)(gp.setTeam[index].getY()), file, gp);
+    }
+
+    private void updateLevelChange(int level, Pet p) {
+        for (int i = 1; i < level; i ++) {
+            p.upLevel();
         }
     }
 

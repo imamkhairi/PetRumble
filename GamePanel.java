@@ -114,13 +114,7 @@ public class GamePanel extends JPanel implements Runnable{
         this.status[1] = new Button((int)(setStatus[1].getX()), (int)(setStatus[1].getY()), "life3", this);
         this.status[2] = new Button((int)(setStatus[2].getX()), (int)(setStatus[2].getY()), "win0", this);
 
-        // set pet
-        ClickListener clickListener = new ClickListener(this);
-        DragListener dragListener = new DragListener(this);
-        this.isClicked = false;
-
-        this.addMouseListener(clickListener);
-        this.addMouseMotionListener(dragListener);
+        
 
         // Point
         this.setTeam = new Point[this.maxPetsNumber];
@@ -156,6 +150,14 @@ public class GamePanel extends JPanel implements Runnable{
         }
 
         this.gm = new GameMechanism(pet, enemyPet, this);
+
+        // set pet
+        ClickListener clickListener = new ClickListener(this, this.gm);
+        DragListener dragListener = new DragListener(this);
+        this.isClicked = false;
+
+        this.addMouseListener(clickListener);
+        this.addMouseMotionListener(dragListener);
     }
 
     public void startGameThread() {
@@ -170,7 +172,6 @@ public class GamePanel extends JPanel implements Runnable{
         long lastTime = System.nanoTime();
         long currentTime;
         long timer = 0;
-        long gametime = 0;
         // long drawCount = 0;
 
         while(this.gameThread != null) {
@@ -197,11 +198,11 @@ public class GamePanel extends JPanel implements Runnable{
             if(timer >= 1000000000) {
                 // System.out.println("state " + this.gameState);
                 if(this.gameState == 1) {
-                    gametime += timer;
+                    gm.gameTime += timer;
                     // battleStart();
-                    gm.gameStart(gametime);
-                    if(gametime >= 2000000000) {
-                        gametime = 0;
+                    gm.gameStart();
+                    if(gm.gameTime >= 2000000000) {
+                        gm.gameTime = 0;
                     }
                 }
                 timer = 0;
