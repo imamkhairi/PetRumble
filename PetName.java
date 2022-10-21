@@ -1,3 +1,4 @@
+
 public class PetName {
     private final int maxCount = 10;
     private String[] name;
@@ -5,7 +6,7 @@ public class PetName {
     public PetName() {
         this.name = new String[maxCount];
         name[0] = "bird";
-        name[1] = "bear";
+        name[1] = "boar";
         name[2] = "cat";
         name[3] = "chicken";
         name[4] = "crab";
@@ -20,4 +21,5 @@ public class PetName {
         int i = (int)(Math.random()*(9));
         return name[i];
     }
+
 }

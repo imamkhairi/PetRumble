@@ -24,6 +24,10 @@ public class Entity{ // ini masih ada kemungkinan untuk jadi parent class gitu
         return this.imageCorner;
     }
 
+    public GamePanel getGP() {
+        return this.gp;
+    }
+
     public int getX() {
         return (int)getPoint().getX();
     }
@@ -43,6 +47,11 @@ public class Entity{ // ini masih ada kemungkinan untuk jadi parent class gitu
     public String getFileInput() {
         return this.fileInput;
     }
+
+    public ImageIcon getImageIcon() {
+        return this.Image;
+    }
+
     public Point getCenter() {
         int centerX = (int)this.imageCorner.getX() + this.getWidth()/2;
         int centerY = (int)this.imageCorner.getY() + this.getHeight()/2;
@@ -56,13 +65,11 @@ public class Entity{ // ini masih ada kemungkinan untuk jadi parent class gitu
         double pY = p.getY()+this.getHeight()/2;
         double distance = Math.sqrt((this.getCenter().getX() - pX)*(this.getCenter().getX() - pX) + (this.getCenter().getY() - pY)*(this.getCenter().getY() - pY));
         boolean collision = false;
-        // System.out.println("Distance : " + (int)distance);
-        // System.out.println(pX);
-        // System.out.println(pY);
         if((int)distance <= 70) collision = true;
         else collision = false;
         return collision;
     }
+
     public void draw(Graphics g2) {
         this.Image.paintIcon(this.gp, g2, (int)this.imageCorner.getX(), (int)this.imageCorner.getY());
     }
