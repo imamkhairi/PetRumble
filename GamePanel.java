@@ -42,7 +42,7 @@ public class GamePanel extends JPanel implements Runnable{
     final int statusY = 30;
 
     final int maxPetsNumber = 5;
-    final int maxButtonNumber = 2;
+    final int maxButtonNumber = 4;
     final int maxStatus = 3;
     final int maxSelection = 3;
 
@@ -66,6 +66,7 @@ public class GamePanel extends JPanel implements Runnable{
     // Button
     Button[] button;
     Button[] status;
+    Button[] showResult;
 
     // Player
     Player playerStatus;
@@ -87,8 +88,8 @@ public class GamePanel extends JPanel implements Runnable{
         this.addKeyListener(keyH);
         this.setFocusable(true);
 
-        this.setBackgroundImage = new ImageIcon("res\\setup.png").getImage();
-        this.battleBackgroundImage = new ImageIcon("res\\battle.png").getImage();
+        this.setBackgroundImage = new ImageIcon("res/setup.png").getImage();
+        this.battleBackgroundImage = new ImageIcon("res/battle.png").getImage();
 
         // Initiate status
         this.playerStatus = new Player();
@@ -97,13 +98,21 @@ public class GamePanel extends JPanel implements Runnable{
 
         this.setButton = new Point[this.maxButtonNumber];
         this.setButton[0] = new Point(0 + 30, screenHeight - 130);
-        this.setButton[1] = new Point(screenWidth - 30 - 280, screenHeight - 130);
+        this.setButton[1] = new Point(screenWidth - 40 - 380, screenHeight - 130);
 
         
         this.button = new Button[this.maxButtonNumber];
         this.button[0] = new Button((int)(setButton[0].getX()), (int)(setButton[0].getY()) , "reroll", this);
         this.button[1] = new Button((int)(setButton[1].getX()), (int)(setButton[1].getY()) , "endturn", this);
+        this.button[2] = new Button(this.screenWidth-130, this.screenHeight- 130, "retry", this);
         
+        this.showResult = new Button[5];
+        this.showResult[0] = new Button(this.screenWidth/2 - 250, this.screenHeight/2-125, "result1", this);
+        this.showResult[1] = new Button(this.screenWidth/2 - 250, this.screenHeight/2-125, "result2", this);
+        this.showResult[2] = new Button(this.screenWidth/2 - 250, this.screenHeight/2-125, "round1", this);
+        this.showResult[3] = new Button(this.screenWidth/2 - 250, this.screenHeight/2-125, "round2", this);
+        this.showResult[4] = new Button(this.screenWidth/2 - 250, this.screenHeight/2-125, "round3", this);
+
         this.setStatus = new Point[this.maxStatus];
         for(int i = 0; i < this.maxSelection; i ++) {
             this.setStatus[i] = new Point(statusX + 150*i, statusY);
@@ -113,7 +122,6 @@ public class GamePanel extends JPanel implements Runnable{
         this.status[0] = new Button((int)(setStatus[0].getX()), (int)(setStatus[0].getY()), "coin10", this);
         this.status[1] = new Button((int)(setStatus[1].getX()), (int)(setStatus[1].getY()), "life3", this);
         this.status[2] = new Button((int)(setStatus[2].getX()), (int)(setStatus[2].getY()), "win0", this);
-
         
 
         // Point
@@ -204,6 +212,12 @@ public class GamePanel extends JPanel implements Runnable{
                     if(gm.gameTime >= 2000000000) {
                         gm.gameTime = 0;
                     }
+                } else {
+                    if(this.playerStatus.getLife() <= 0) {
+                        System.out.println("You Lose");
+                    } else if(this.playerStatus.getWin() >= 3) {
+                        System.out.println("PLayer WIN");
+                    }
                 }
                 timer = 0;
             }
@@ -247,7 +261,7 @@ public class GamePanel extends JPanel implements Runnable{
                     this.pet[i].draw(g2);
                 }
             }
-            for(int i = 0; i < this.maxButtonNumber - 1; i++) {
+            for(int i = 0; i < this.maxButtonNumber ; i++) {
                 if(this.button[i] != null) {
                     this.button[i].draw(g2);
                 }
@@ -269,6 +283,21 @@ public class GamePanel extends JPanel implements Runnable{
             }
         }
         this.button[1].draw(g2);
+        this.button[2].draw(g2);
+        if(this.playerStatus.getLife() == 0) {
+            this.showResult[1].draw(g2); 
+        } else if (this.playerStatus.getWin() == 3) {
+            this.showResult[0].draw(g2); 
+        }
+        if(this.gameState == 1) {
+            if(this.gm.gameResult == 0) {
+                this.showResult[4].draw(g2);
+            } else if(this.gm.gameResult == 1) {
+                this.showResult[3].draw(g2);
+            }else if(this.gm.gameResult == 2) {
+                this.showResult[3].draw(g2);
+            }
+        }
 
         g2.dispose();
     }

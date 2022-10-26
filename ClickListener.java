@@ -38,15 +38,36 @@ public class ClickListener extends MouseAdapter{
                             gp.selectedButton = i;
                             if(i == 0) rerollPet();
                             if(i == 1) {
-                                if(gp.gameState == 0) this.changeState();
+                                if(gp.gameState ==  0) this.changeState();
                                 else if(gp.gameState == 1){
-                                    gp.gameState--;
-                                    gp.gm.resetPet();
-                                    gp.gm.resetPanel();
-                                    gp.playerStatus.resetCoin();
-                                    updatePlayerCoin();
-                                    gm.gameTime = 0;
+                                    if(this.gp.gm.gameResult == 1) {
+                                        this.gp.playerStatus.upWin();
+                                        System.out.println(this.gp.playerStatus.getWin());
+                                    } else if(this.gp.gm.gameResult == 2) {
+                                        this.gp.playerStatus.donwLife();
+                                        System.out.println(this.gp.playerStatus.getLife());
+                                    }
+                                    if(gm.gameResult >= 0 ) {
+                                        gp.gameState--;
+                                        gp.gm.resetPet();
+                                        gp.gm.resetPanel();
+                                        gp.playerStatus.resetCoin();
+                                        gm.addEnemy();
+                                        gm.updateEnemy();
+                                        updatePlayerCoin();
+                                        updatePlayerLife();
+                                        updatePlayerWin();
+                                        gm.gameTime = 0;
+                                        gm.gameResult = -1;
+                                    }
                                 }
+                            }
+                            if(i == 2) {
+                                System.out.println("retry");
+                                this.resetAllPet();
+                                updatePlayerCoin();
+                                updatePlayerLife();
+                                updatePlayerWin();
                             }
                         }
                         gp.isClicked = true;
@@ -55,6 +76,21 @@ public class ClickListener extends MouseAdapter{
                 }
             }
         }
+    }
+
+    private void resetAllPet() {
+        for(int i = 0; i < this.gp.maxPetsNumber; i ++) {
+            if(this.gp.pet[i] != null) {
+                this.gp.pet[i] = null;
+            }
+            if(this.gp.enemyPet[i] != null) {
+                this.gp.enemyPet[i] = null;
+            }
+            this.gp.playerStatus.resetAll();
+            this.resetSelection();
+            this.resetEnemy();
+        }
+        
     }
 
     public void mouseReleased(MouseEvent e) {
@@ -68,6 +104,25 @@ public class ClickListener extends MouseAdapter{
             // System.out.println("pet reset");
         }
         resetValue();
+    }
+
+    public void resetSelection() {
+        String fileName;
+        for(int i = 0; i < this.gp.maxSelection;  i++) {
+            fileName = this.gp.petName.getRandomName();
+            if(this.gp.petSelection[i] != null) {
+                this.gp.petSelection[i] = null;
+            }
+            this.gp.petSelection[i] = new Pet((int)(this.gp.setSelection[i].getX()), (int)(this.gp.setSelection[i].getY()), fileName, this.gp);
+        }
+    }
+
+    public void resetEnemy() {
+        String fileName;
+        for(int i = 0; i < 3; i ++) {
+            fileName = this.gp.petName.getRandomName();
+            this.gp.enemyPet[i] = new Pet((int)(this.gp.setEnemyBattle[i].getX()), (int)(this.gp.setEnemyBattle[i].getY()), fileName, this.gp);
+        }
     }
     
     private void resetPosition(int index, Point[] origin, Pet[] p) {
@@ -92,6 +147,14 @@ public class ClickListener extends MouseAdapter{
     private void movePet(int index, Pet[] p) {
         if(gp.pet[gp.collide] == null) {
             instantiatePet(index, p);
+        } else if(gp.collide == gp.selectedPet) {
+            String name = gp.pet[gp.selectedPet].getFileInput();
+            int level = gp.pet[gp.selectedPet].getLevel();
+            gp.pet[gp.selectedPet] = null;
+            gp.pet[gp.collide] =  new Pet((int)(this.gp.setTeam[gp.collide].getX()), (int)(this.gp.setTeam[gp.collide].getY()), name, this.gp);
+            for(int i = 1; i < level; i ++) {
+                gp.pet[gp.collide].upLevel();
+            }
         } else if (gp.collide != gp.selectedPet && gp.pet[gp.collide] != null && gp.pet[gp.selectedPet].getFileInput().equals(gp.pet[gp.collide].getFileInput())) {
             gp.pet[gp.selectedPet] = null;
             gp.pet[gp.collide].upLevel();
@@ -106,7 +169,6 @@ public class ClickListener extends MouseAdapter{
             updateLevelChange(a_level, gp.pet[gp.collide]);
         }
     }
-
     private void changePet(int index, String file) {
         gp.pet[index] = null;
         gp.pet[index] = new Pet((int)(gp.setTeam[index].getX()), (int)(gp.setTeam[index].getY()), file, gp);
@@ -183,8 +245,20 @@ public class ClickListener extends MouseAdapter{
         gp.status[0] = new Button((int)(gp.setStatus[0].getX()), (int)(gp.setStatus[0].getY()), newFileName, gp);
     }
 
+    private void updatePlayerLife() {
+        gp.status[1] = null;
+        String newLife = "life" + gp.playerStatus.getLife();
+        gp.status[1] = new Button((int)(gp.setStatus[1].getX()), (int)(gp.setStatus[1].getY()), newLife, gp);
+    }
+
+    private void updatePlayerWin() {
+        gp.status[2] = null;
+        String newWin = "win" + gp.playerStatus.getWin();
+        gp.status[2] = new Button((int)(gp.setStatus[2].getX()), (int)(gp.setStatus[2].getY()), newWin, gp);
+    }
+
     private void changeState() {
-        if(gp.gameState == 0) {
+        if(this.gp.playerStatus.getWin() < 3 && this.gp.playerStatus.getLife() > 0) {
             gp.gameState++;
             for(int i = 0; i < gp.maxPetsNumber; i++) {
                 if(gp.pet[i] != null) {

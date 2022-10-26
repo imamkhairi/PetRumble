@@ -11,7 +11,7 @@ public class Entity{ // ini masih ada kemungkinan untuk jadi parent class gitu
     
     public Entity (int x, int y, String image ,GamePanel gp) {
         this.fileInput = image;
-        String filename = "res\\" + image + ".png";
+        String filename = "res/" + image + ".png";
         this.gp = gp;
         imageCorner = new Point(x, y);
         this.Image = new ImageIcon(filename);

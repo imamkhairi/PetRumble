@@ -32,4 +32,18 @@ public class Player {
     public void minLife() {
         this.life--;
     }
+
+    public void upWin() {
+        this.win ++;
+    }
+    
+    public void donwLife() {
+        this.life --;
+    }
+
+    public void resetAll() {
+        this.coin = 10;
+        this.life = 3;
+        this.win = 0;
+    }
 }

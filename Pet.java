@@ -16,8 +16,8 @@ public class Pet extends Entity {
         super(x, y, image, gp);
         this.level = 1;
         setPetStatus();
-        this.statusIcon = new ImageIcon("res\\status.png");
-        this.levelIcon = new ImageIcon("res\\lvl1.png");
+        this.statusIcon = new ImageIcon("res/status.png");
+        this.levelIcon = new ImageIcon("res/lvl1.png");
         this.setStatus = new Point(super.getX(), super.getY()+140);
         this.setLevel = new Point(super.getX(), super.getY()-30);
     }
@@ -83,7 +83,7 @@ public class Pet extends Entity {
     private void updateLevel() {
         String filename = "lvl" + Integer.toString(getLevel());
         this.levelIcon = null;
-        this.levelIcon = new ImageIcon("res\\" + filename + ".png");
+        this.levelIcon = new ImageIcon("res/" + filename + ".png");
     }
     
     public int getAttack() {
