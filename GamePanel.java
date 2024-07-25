@@ -293,7 +293,7 @@ public class GamePanel extends JPanel implements Runnable{
             if(this.gm.gameResult == 0) {
                 this.showResult[4].draw(g2);
             } else if(this.gm.gameResult == 1) {
-                this.showResult[3].draw(g2);
+                this.showResult[2].draw(g2);
             }else if(this.gm.gameResult == 2) {
                 this.showResult[3].draw(g2);
             }
